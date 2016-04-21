@@ -15,26 +15,36 @@ public class AnnotatedDialog {
   private String message;
   private String quilifiedSimpleClassName;
   private String simpleClassName;
+  private String type;
 
-  public AnnotatedDialog(TypeElement typeElement) {
+  public AnnotatedDialog(TypeElement typeElement) throws IllegalArgumentException {
     this.typeElement = typeElement;
     Dialog dialog = typeElement.getAnnotation(Dialog.class);
-    clazzType = dialog.clazz();
+
+    type = dialog.type();
     title = dialog.title();
     message = dialog.message();
     if (title == null || title.length() <= 0) {
-      title = clazzType.getSimpleName();
-    } else {
-      try {
-        quilifiedSimpleClassName = clazzType.getCanonicalName();
-        simpleClassName = clazzType.getSimpleName();
-      } catch (MirroredTypeException mirrorException) {
-        DeclaredType declareType = (DeclaredType) mirrorException.getTypeMirror();
-        TypeElement tpElement = (TypeElement) declareType.asElement();
-        quilifiedSimpleClassName = tpElement.getQualifiedName().toString();
-        simpleClassName = tpElement.getSimpleName().toString();
-      }
+      title = dialog.type();
     }
+    try {
+      clazzType = dialog.clazz();
+      quilifiedSimpleClassName = clazzType.getCanonicalName();
+      simpleClassName = clazzType.getSimpleName();
+    } catch (MirroredTypeException mirrorException) {
+      DeclaredType declareType = (DeclaredType) mirrorException.getTypeMirror();
+      TypeElement tpElement = (TypeElement) declareType.asElement();
+      quilifiedSimpleClassName = tpElement.getQualifiedName().toString();
+      simpleClassName = tpElement.getSimpleName().toString();
+    }
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public Class<?> getClazzType() {
