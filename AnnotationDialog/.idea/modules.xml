@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/annotationapi/annotationapi.iml" filepath="$PROJECT_DIR$/annotationapi/annotationapi.iml" />
       <module fileurl="file://$PROJECT_DIR$/annotationcompiler/annotationcompiler.iml" filepath="$PROJECT_DIR$/annotationcompiler/annotationcompiler.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dialogbinder/dialogbinder.iml" filepath="$PROJECT_DIR$/dialogbinder/dialogbinder.iml" />
     </modules>
   </component>
 </project>

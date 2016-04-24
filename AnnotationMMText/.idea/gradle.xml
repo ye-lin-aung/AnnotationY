@@ -8,19 +8,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/annotationapi" />
-            <option value="$PROJECT_DIR$/annotationcompiler" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/dialogbinder" />
+            <option value="$PROJECT_DIR$/mmtextcomponents" />
           </set>
         </option>
         <option name="myModules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/annotationapi" />
-            <option value="$PROJECT_DIR$/annotationcompiler" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/dialogbinder" />
+            <option value="$PROJECT_DIR$/mmtextcomponents" />
           </set>
         </option>
       </GradleProjectSettings>

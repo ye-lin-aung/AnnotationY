@@ -2,6 +2,7 @@ package com.annotationcompiler;
 
 import com.annotationapi.AnnotationUtils;
 import com.annotationapi.Dialog;
+import com.annotationapi.VarDialog;
 import com.google.auto.service.AutoService;
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -19,6 +20,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
@@ -28,7 +31,7 @@ import javax.tools.Diagnostic;
   private Elements elementsUtils;
   private Messager messager;
   private Types types;
-  private Map<String, AnnotatedGroupDialog> map = new LinkedHashMap<>();
+  private Map<String, AnnotatedGroupVariableDialog> map = new LinkedHashMap<>();
 
   @Override public Set<String> getSupportedAnnotationTypes() {
     return AnnotationUtils.getSupportedAnnotations();
@@ -49,29 +52,31 @@ import javax.tools.Diagnostic;
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     try {
-
-      for (Element element : roundEnv.getElementsAnnotatedWith(Dialog.class)) {
-        if (element.getKind() != ElementKind.CLASS) {
-          throw new ProcessingException(element, "Only Class can be annotated with @%s",
-              Dialog.class.getSimpleName());
+      Set<VariableElement> fields =
+          ElementFilter.fieldsIn(roundEnv.getElementsAnnotatedWith(VarDialog.class));
+      for (VariableElement variableElement : fields) {
+        if (variableElement.getKind() != ElementKind.FIELD) {
+          throw new ProcessingException(variableElement, "Only Variables can be annotated with @%s",
+              VarDialog.class.getCanonicalName());
         } else {
-          TypeElement typeElement = (TypeElement) element;
-          AnnotatedDialog annotatedDialog = new AnnotatedDialog(typeElement);
-          checkValidDialog(annotatedDialog);
-          AnnotatedGroupDialog annotatedGroupDialog =
-              map.get(annotatedDialog.getQuilifiedSimpleClassName());
-
+          AnnotatedVariableDialog annotatedVariableDialog =
+              new AnnotatedVariableDialog(variableElement);
+          AnnotatedGroupVariableDialog annotatedGroupDialog =
+              map.get(annotatedVariableDialog.getQuilifiedSimpleClassName());
           if (annotatedGroupDialog == null) {
-            String qulifiedClassName = annotatedDialog.getQuilifiedSimpleClassName();
-            annotatedGroupDialog = new AnnotatedGroupDialog(qulifiedClassName);
+            String qulifiedClassName = annotatedVariableDialog.getQuilifiedSimpleClassName();
+            annotatedGroupDialog =
+                new AnnotatedGroupVariableDialog(qulifiedClassName, annotatedVariableDialog);
             map.put(qulifiedClassName, annotatedGroupDialog);
           }
-          annotatedGroupDialog.addToMap(annotatedDialog);
+          annotatedGroupDialog.addToMap(annotatedVariableDialog);
+
+          for (AnnotatedGroupVariableDialog factoryClass : map.values()) {
+
+            factoryClass.generateCode(elementsUtils, filer);
+          }
+          map.clear();
         }
-        for (AnnotatedGroupDialog factoryClass : map.values()) {
-          factoryClass.generateCode(elementsUtils, filer);
-        }
-        map.clear();
       }
     } catch (ProcessingException processingException) {
       printErrorStackTrace(processingException.getElement(), processingException.getMessage());

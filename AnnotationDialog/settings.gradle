@@ -1,1 +1,1 @@
-include ':app', ':annotationapi', ':annotationcompiler'
+include ':app', ':annotationapi', ':annotationcompiler', ':dialogbinder'

@@ -10,6 +10,7 @@ public class AnnotationUtils {
   protected static Set<String> supportedAnnotations = new HashSet<>();
 
   public static Set<String> getSupportedAnnotations() {
+    supportedAnnotations.add(VarDialog.class.getCanonicalName());
     supportedAnnotations.add(Dialog.class.getCanonicalName());
     return supportedAnnotations;
   }
